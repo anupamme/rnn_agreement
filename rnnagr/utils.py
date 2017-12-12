@@ -14,7 +14,7 @@ dependency_fields = ['sentence', 'orig_sentence', 'pos_sentence',
                      'max_depth', 'all_nouns', 'nouns_up_to_verb']
 
 def deps_to_tsv(deps, outfile):
-    writer = csv.writer(file(outfile, 'w'), delimiter='\t')
+    writer = csv.writer(open(outfile, 'w'), delimiter='\t')
     writer.writerow(dependency_fields)
     for dep in deps:
         writer.writerow([dep[key] for key in dependency_fields])
@@ -55,7 +55,7 @@ def create_freq_dict(infile, outfile, minfreq=50):
         if i % 1000000 == 0:
             print(i)
 
-    outfile = file(outfile, 'w')
+    outfile = open(outfile, 'w')
     for (w, pos), count in d.items():
         if count > minfreq:
             outfile.write('%s\t%s\t%d\n' % (w, pos, count))
@@ -85,7 +85,7 @@ def gen_inflect_from_vocab(vocab_file, freq_threshold=1000):
     nns = {}
     from_pos = {'NNS': nns, 'NN': nn, 'VBP': vbp, 'VBZ': vbz}
 
-    for line in file(vocab_file):
+    for line in open(vocab_file):
         if line.startswith(' '):   # empty string token
             continue
         word, pos, count = line.strip().split()
