@@ -1,4 +1,4 @@
-from .utils import zread
+from utils import zread
 
 total_n_sentences = 77633994.0
 
@@ -28,6 +28,6 @@ def sentence_subset(infile, outfile, skip, maxlen=50):
         if i % (skip + 1) != 0 or len(sent) > maxlen:
             continue
         if i % 100000 == 0:
-            print('%5.3f %d' % (i / total_n_sentences, n))
+            print '%5.3f %d' % (i / total_n_sentences, n)
         out.write('\n'.join(sent) + '\n\n')
         n += 1

@@ -1,8 +1,8 @@
 from collections import Counter
 import random
 
-from . import filenames
-from .utils import zread, tokenize_blanks, gen_inflect_from_vocab
+import filenames
+from utils import zread, tokenize_blanks, gen_inflect_from_vocab
 
 INDEX = 0
 WORD = 1

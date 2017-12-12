@@ -1,9 +1,9 @@
-from . import filenames
+import filenames
 import os.path as op
 import pandas as pd
 
-from .google_lm import GoogleLanguageModel
-from .utils import gen_inflect_from_vocab, get_grouping, annotate_relpron
+from google_lm import GoogleLanguageModel
+from utils import gen_inflect_from_vocab, get_grouping, annotate_relpron
 
 # deps, glm, inflect_verb = load()
 def load():

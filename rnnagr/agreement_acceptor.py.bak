@@ -4,12 +4,11 @@ from keras.layers.core import Dense, Activation
 from keras.layers.embeddings import Embedding
 from keras.models import Sequential
 from keras.preprocessing import sequence
-from keras.layers.recurrent import LSTM
 import numpy as np
 import pandas as pd
 
-from .rnn_model import RNNModel
-from .utils import gen_inflect_from_vocab, dependency_fields
+from rnn_model import RNNModel
+from utils import gen_inflect_from_vocab, dependency_fields
 
 
 class RNNAcceptor(RNNModel):
@@ -28,7 +27,7 @@ class RNNAcceptor(RNNModel):
             examples = d[0] + d[1]
         random.shuffle(examples)
 
-        Y, X, deps = list(zip(*examples))
+        Y, X, deps = zip(*examples)
         Y = np.asarray(Y)
         X = sequence.pad_sequences(X, maxlen=self.maxlen)
         n_train = int(self.prop_train * len(X))
@@ -40,22 +39,14 @@ class RNNAcceptor(RNNModel):
     def create_model(self):
         self.log('Creating model')
         self.model = Sequential()
-        self.log('Added Sequential')
         self.model.add(Embedding(len(self.vocab_to_ints) + 1,
                                  self.embedding_size,
                                  input_length=self.maxlen))
-        self.log('Added Embedding')
-        lstm_var = LSTM(self.rnn_output_size, activation='tanh', recurrent_activation='hard_sigmoid', use_bias=True,    kernel_initializer='glorot_uniform', recurrent_initializer='orthogonal', bias_initializer='zeros',          unit_forget_bias=True, kernel_regularizer=None, recurrent_regularizer=None, bias_regularizer=None,  activity_regularizer=None, kernel_constraint=None, recurrent_constraint=None, bias_constraint=None, dropout=0.0,    recurrent_dropout=0.0, implementation=1, return_sequences=False, return_state=False, go_backwards=False, stateful=False, unroll=True)
-        self.model.add(lstm_var)
-        
-#        self.model.add(self.rnn_class(output_dim=self.rnn_output_size,
-#                                      input_length=self.maxlen,
-#                                      unroll=True))
-        self.log('Added LSTM')
+        self.model.add(self.rnn_class(output_dim=self.rnn_output_size,
+                                      input_length=self.maxlen,
+                                      unroll=True))
         self.model.add(Dense(1))
-        self.log('Added Dense')
         self.model.add(Activation('sigmoid'))
-        self.log('Added Activation')
 
     def compile_model(self):
         self.log('Compiling model')
@@ -86,7 +77,7 @@ class CorruptAgreement(RNNAcceptor):
     def __init__(self, *args, **kwargs):
         RNNAcceptor.__init__(self, *args, **kwargs)
         self.class_to_code = {'grammatical': 0, 'ungrammatical': 1}
-        self.code_to_class = {x: y for y, x in list(self.class_to_code.items())}
+        self.code_to_class = {x: y for y, x in self.class_to_code.items()}
         self.inflect_verb, _ = gen_inflect_from_vocab(self.vocab_file)
 
     def process_single_dependency(self, dep):
@@ -106,7 +97,7 @@ class PredictVerbNumber(RNNAcceptor):
     def __init__(self, *args, **kwargs):
         RNNAcceptor.__init__(self, *args, **kwargs)
         self.class_to_code = {'VBZ': 0, 'VBP': 1}
-        self.code_to_class = {x: y for y, x in list(self.class_to_code.items())}
+        self.code_to_class = {x: y for y, x in self.class_to_code.items()}
 
     def process_single_dependency(self, dep):
         dep['label'] = dep['verb_pos']
@@ -131,9 +122,9 @@ class PredictVerbNumberOnlyGeneralizedNouns(PredictVerbNumber):
         poses =  dep['pos_sentence'].split()[:dep['verb_index']]
         tokens = [token for token, pos in zip(tokens, poses) if
                   pos in ['NN', 'NNS', 'NNP', 'PRP']]
-        print(dep['sentence'])
-        print(tokens)
-        print()
+        print dep['sentence']
+        print tokens
+        print
         return tokens
 
 

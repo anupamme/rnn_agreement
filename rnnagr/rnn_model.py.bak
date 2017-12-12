@@ -2,7 +2,7 @@ import json
 import multiprocessing
 import os
 import os.path as op
-import pickle as pickle
+import cPickle as pickle
 import random
 
 from keras.models import model_from_json
@@ -10,8 +10,8 @@ from keras.callbacks import EarlyStopping
 from keras.layers.recurrent import LSTM
 import pandas as pd
 
-from . import filenames
-from .utils import deps_from_tsv
+import filenames
+from utils import deps_from_tsv
 
 
 class RNNModel(object):
@@ -47,7 +47,7 @@ class RNNModel(object):
         self.set_serialization_dir(serialization_dir)
 
     def log(self, message):
-        print(message)
+        print message
 
     def pipeline(self):
         examples = self.load_examples()

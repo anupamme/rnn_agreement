@@ -2,7 +2,7 @@ from collections import Counter
 import csv
 import subprocess
 
-from . import inflect
+import inflect
 import pandas as pd
 from statsmodels.stats.proportion import proportion_confint
 infl_eng = inflect.engine()
@@ -24,7 +24,7 @@ def deps_from_tsv(infile, limit=None):
     for i, d in enumerate(csv.DictReader(open(infile), delimiter='\t')):
         if limit is not None and i >= limit:
             break
-        res.append({x: int(y) if y.isdigit() else y for x, y in list(d.items())})
+        res.append({x: int(y) if y.isdigit() else y for x, y in d.items()})
     return res
 
 def zread(fname):
@@ -53,10 +53,10 @@ def create_freq_dict(infile, outfile, minfreq=50):
             s = stripped.split()
             d[s[1], s[3]] += 1
         if i % 1000000 == 0:
-            print(i)
+            print i
 
     outfile = file(outfile, 'w')
-    for (w, pos), count in d.items():
+    for (w, pos), count in d.iteritems():
         if count > minfreq:
             outfile.write('%s\t%s\t%d\n' % (w, pos, count))
 
@@ -94,14 +94,14 @@ def gen_inflect_from_vocab(vocab_file, freq_threshold=1000):
             from_pos[pos][word] = count
 
     verb_infl = {'VBP': 'VBZ', 'VBZ': 'VBP'}
-    for word, count in vbz.items():
+    for word, count in vbz.iteritems():
         candidate = infl_eng.plural_verb(word)
         if candidate in vbp:
             verb_infl[candidate] = word
             verb_infl[word] = candidate
 
     noun_infl = {'NN': 'NNS', 'NNS': 'NN'}
-    for word, count in nn.items():
+    for word, count in nn.iteritems():
         candidate = infl_eng.plural_noun(word)
         if candidate in nns:
             noun_infl[candidate] = word
@@ -124,7 +124,7 @@ def annotate_relpron(df):
                 bool(relprons & set(pos_in_dep)) | first_is_that)
 
     df['blacklisted'], df['has_early_relpron'], df['has_relpron'] = \
-        list(zip(*df.apply(f, axis=1)))
+        zip(*df.apply(f, axis=1))
     df['has_early_relpron'] = True
 
     def g(x):

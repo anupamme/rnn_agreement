@@ -5,13 +5,13 @@ from keras.layers.recurrent import SimpleRNN
 import theano
 theano.gof.compilelock.set_lock_status(False)
 
-from . import filenames
-from .agreement_acceptor import PredictVerbNumber, CorruptAgreement, \
+import filenames
+from agreement_acceptor import PredictVerbNumber, CorruptAgreement, \
     PredictVerbNumberOnlyNouns, PredictVerbNumberOnlyGeneralizedNouns, \
     InflectVerb
-from .language_model import LanguageModel
-from .collect_agreement import CollectAgreement
-from .utils import deps_to_tsv
+from language_model import LanguageModel
+from collect_agreement import CollectAgreement
+from utils import deps_to_tsv
 
 # sentence_subset(filenames.parsed_wiki, '/tmp/newsubset', skip=4)
 

@@ -3,8 +3,8 @@ import os.path as op
 
 import pandas as pd
 
-from . import filenames
-from .utils import get_grouping
+import filenames
+from utils import get_grouping
 
 
 class OverallReport(object):
@@ -52,7 +52,7 @@ class OverallReport(object):
             g = get_grouping(no_intervening, ('distance',))
             results.setdefault('only_distance', []).append(g)
 
-        for x in list(results.values()):
+        for x in results.values():
             x[-1]['run'] = run
 
     def load_task_results(self, task, stop_after=None):
@@ -63,8 +63,8 @@ class OverallReport(object):
         for i, s in enumerate(l):
             if stop_after is not None and i == stop_after:
                 break
-            print('%d out of %d' % (i + 1, end))
-            print('   Reading results')
+            print '%d out of %d' % (i + 1, end)
+            print '   Reading results'
             df = pd.read_csv(op.join(d, s, 'test_results.csv'),
                              nrows=self.nrows)
             if self.join:
@@ -76,17 +76,17 @@ class OverallReport(object):
             ensemble['n_correct'] += df['correct'].astype(int)
             if (ensemble['orig_sentence'].head(100) !=
                 df['orig_sentence'].head(100)).any():
-                print('Run %d: Sentences not aligned across runs' % i)
+                print 'Run %d: Sentences not aligned across runs' % i
 
-            print('   Calculating summaries')
+            print '   Calculating summaries'
             self.groupings(results, df, task, s)
 
-        print('Generating ensemble')
+        print 'Generating ensemble'
         ensemble['correct'] = ensemble.n_correct.divide(len(l)) > 0.5
         self.groupings(results, ensemble, task, 'ensemble')
 
         concs = []
-        for grouping, dfs in list(results.items()):
+        for grouping, dfs in results.items():
             conc = pd.concat(dfs)
             conc['grouping'] = grouping
             concs.append(conc)
@@ -100,7 +100,7 @@ class OverallReport(object):
         tasks = self.tasks[:1] if self.debug else self.tasks
         limit = 3 if self.debug else None
         for task in tasks:
-            print('\n%s\n%s' % (task, '=' * len(task)))
+            print '\n%s\n%s' % (task, '=' * len(task))
             df = self.load_task_results(task, limit)
             df['task'] = task
             dfs.append(df)

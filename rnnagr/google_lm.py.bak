@@ -6,7 +6,7 @@ import tensorflow as tf
 from google.protobuf import text_format
 
 import data_utils
-from . import filenames
+import filenames
 
 # For saving demo resources, use batch size 1 and step 1.
 BATCH_SIZE = 1
@@ -27,7 +27,7 @@ class GoogleLanguageModel(object):
 
         self.load_model(pbtxt, ckpt) 
         self.vocab = data_utils.CharsVocabulary(vocab_file, MAX_WORD_LEN)
-        self.graph = list(self.t.values())[0].graph
+        self.graph = self.t.values()[0].graph
 
     def load_affine_transformation(self):
         self.bias = self.sess.run(self.graph.get_tensor_by_name('softmax/b:0'))

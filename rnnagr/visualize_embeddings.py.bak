@@ -5,7 +5,7 @@ import numpy as np
 
 from sklearn.decomposition import PCA
 
-from . import filenames
+import filenames
 
 
 def create_pos_dict(vocab_file):
@@ -24,9 +24,9 @@ def create_pos_dict(vocab_file):
             by_pos.setdefault(word, {})[pos] = count
     
     pos_unambig_words = {}
-    for word, pos_freqs in list(by_pos.items()):
+    for word, pos_freqs in by_pos.items():
         total = sum(pos_freqs.values())
-        for key, value in list(pos_freqs.items()):
+        for key, value in pos_freqs.items():
             if float(value) / total > unambig_threshold:
                 pos_unambig_words[word] = key
                 break
@@ -44,7 +44,7 @@ def visualize_embeddings(aa, pca=True, text=True, n=100, components=(0, 1),
                   'Base verb form']
 
     pos_in_vocab = {}
-    for x in list(aa.vocab_to_ints.keys()):
+    for x in aa.vocab_to_ints.keys():
         pos = pos_dict.get(x)
         if pos in relevant_pos:
             pos_in_vocab.setdefault(pos, []).append(x)
@@ -63,7 +63,7 @@ def visualize_embeddings(aa, pca=True, text=True, n=100, components=(0, 1),
 
     plt.scatter(mat[:, c1], mat[:, c2], c='white', edgecolors='white')
     colors = ['red', 'blue', 'green', 'black']
-    colordict = dict(list(zip(pos_tags, colors)))
+    colordict = dict(zip(pos_tags, colors))
     if text:
         for i, (p, word) in enumerate(samples):
             color = colordict[p]

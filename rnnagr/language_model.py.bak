@@ -9,8 +9,8 @@ from keras.models import Sequential
 from keras.preprocessing import sequence
 from keras.utils.generic_utils import Progbar
 
-from .rnn_model import RNNModel
-from .utils import gen_inflect_from_vocab, dependency_fields
+from rnn_model import RNNModel
+from utils import gen_inflect_from_vocab, dependency_fields
 
 
 class LanguageModel(RNNModel):
@@ -105,7 +105,7 @@ class LanguageModel(RNNModel):
         validation_loss_history = []
 
         for epoch in range(n_epochs):
-            print('Epoch', epoch)
+            print 'Epoch', epoch
             training_loss = []
             end = int(float(len(x)) / self.batch_size)
             progbar = Progbar(end)
@@ -122,8 +122,8 @@ class LanguageModel(RNNModel):
                 
             # test on validation set
             validation_loss = []
-            print()
-            print('Evaluating on validation set:')
+            print
+            print 'Evaluating on validation set:'
             end = int(float(len(val_x)) / self.batch_size)
             progbar = Progbar(end)
             for i in range(0, len(val_x), self.batch_size):
@@ -142,15 +142,15 @@ class LanguageModel(RNNModel):
             filename = op.join(self.serialization_dir,
                                'weights_epoch%d.h5' % epoch)
             self.model.save_weights(filename, overwrite=True)
-            print()
-            print(('Mean training loss: %5.3f; mean validation loss: %5.3f\n' %
-                   (training_loss_history[-1], validation_loss_history[-1])))
+            print
+            print ('Mean training loss: %5.3f; mean validation loss: %5.3f\n' %
+                   (training_loss_history[-1], validation_loss_history[-1]))
             if (len(validation_loss_history) > 1 and 
                 validation_loss_history[-1] >= validation_loss_history[-2]):
                 break
 
-        self.training_history = (list(map(float, training_loss_history)),
-                                 list(map(float, validation_loss_history)))
+        self.training_history = (map(float, training_loss_history),
+                                 map(float, validation_loss_history))
 
     def evaluate(self, howmany=1000):
         self.model.model._make_test_function()
